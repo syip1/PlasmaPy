@@ -1,0 +1,1 @@
+Edited plasmapy/particles/particle_class.py to remove warnings (from deprecated escape sequence).
