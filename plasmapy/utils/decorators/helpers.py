@@ -6,9 +6,13 @@ __all__ = ["modify_docstring", "preserve_signature"]
 import functools
 import inspect
 
+from typing import Optional
 
-def modify_docstring(func=None, prepend: str = None, append: str = None):
-    """
+
+def modify_docstring(
+    func=None, prepend: Optional[str] = None, append: Optional[str] = None
+):
+    r"""
     A decorator which programmatically prepends and/or appends the docstring
     of the decorated method/function.  The unmodified/original docstring is
     saved as the ``__original_doc__`` attribute.
@@ -31,7 +35,6 @@ def modify_docstring(func=None, prepend: str = None, append: str = None):
 
     Examples
     --------
-
         >>> @modify_docstring(prepend='''Hello''', append='''World''')
         ... def foo():
         ...     '''Beautiful'''
@@ -39,7 +42,7 @@ def modify_docstring(func=None, prepend: str = None, append: str = None):
         >>> foo.__original_doc__
         'Beautiful'
         >>> foo.__doc__
-        'Hello\\n\\nBeautiful\\n\\nWorld'
+        'Hello\n\nBeautiful\n\nWorld'
 
     """
 
@@ -55,7 +58,7 @@ def modify_docstring(func=None, prepend: str = None, append: str = None):
 
             return f(*bound_args.args, **bound_args.kwargs)
 
-        if prepend is None and append is None:
+        if prepend is append is None:
             raise TypeError(
                 "Decorator @modify_docstring() missing argument 'prepend' and/or"
                 " 'append', at least one argument is required."
@@ -79,7 +82,7 @@ def modify_docstring(func=None, prepend: str = None, append: str = None):
         # append docstring lines
         if isinstance(append, str):
             appendlines = inspect.cleandoc(append).splitlines()
-            appendlines = [""] + appendlines
+            appendlines = ["", *appendlines]
         elif append is None:
             appendlines = []
         else:
@@ -92,12 +95,10 @@ def modify_docstring(func=None, prepend: str = None, append: str = None):
 
         return wrapper
 
-    if func is not None:
-        # `modify_docstring` called as a function
-        return decorator(func)
-    else:
-        # `modify_docstring` called as a decorator "sugar-syntax"
-        return decorator
+    # func is None: usage like @modify_docstring
+    # func is not None: usage like @modify_docstring()
+
+    return decorator(func) if func is not None else decorator
 
 
 def preserve_signature(f):

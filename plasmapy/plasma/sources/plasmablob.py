@@ -35,7 +35,7 @@ class PlasmaBlob(GenericPlasma):
         # extract mass from particle
         self.ionMass = particle_mass(self.particle)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Fetch regimes for easy printing.
 
@@ -49,7 +49,7 @@ class PlasmaBlob(GenericPlasma):
         """
         return self.__repr__() + "\n" + "\n".join(self.regimes())
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """
         Return a string representation of this instance.
 
@@ -93,34 +93,25 @@ class PlasmaBlob(GenericPlasma):
         Generate a comprehensive description of the plasma regimes
         based on plasma properties and consequent plasma parameters.
         """
-        # getting dimensionless parameters
         coupling = self.coupling()
         quantum_theta = self.quantum_theta()
 
-        # determining regimes based off dimensionless parameters
-        # coupling
         if coupling <= 0.01:
-            # weakly coupled
             coupling_str = f"Weakly coupled regime: Gamma = {coupling}."
         elif coupling >= 100:
-            # strongly coupled
             coupling_str = f"Strongly coupled regime: Gamma = {coupling}."
         else:
-            # intermediate regime
             coupling_str = f"Intermediate coupling regime: Gamma = {coupling}."
-        # quantum_theta
+
         if quantum_theta <= 0.01:
-            # Fermi energy dominant
             quantum_theta_str = (
                 f"Fermi quantum energy dominant: Theta = {quantum_theta}"
             )
         elif quantum_theta >= 100:
-            # thermal kinetic energy dominant
             quantum_theta_str = (
                 f"Thermal kinetic energy dominant: Theta = {quantum_theta}"
             )
         else:
-            # intermediate regime
             quantum_theta_str = (
                 f"Both Fermi and thermal energy important: Theta = {quantum_theta}"
             )
