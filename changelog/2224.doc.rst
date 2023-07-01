@@ -1,0 +1,1 @@
+Fixed the path display issues on the getting ready to contribute page of the docs.
